@@ -43,10 +43,10 @@ namespace WebApplication
             services.AddMemoryCache();
 
             #region scope
-            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<UserRepository, UserRepository>();
             services.AddScoped<IRolesRepository, RolesRepository>();
             services.AddHttpContextAccessor();
-            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             #endregion
 
             services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
@@ -68,7 +68,7 @@ namespace WebApplication
                 {
                     OnTokenValidated = context =>
                     {
-                        var userService = context.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
+                        var userService = context.HttpContext.RequestServices.GetRequiredService<UserRepository>();
                         var userId = int.Parse(context.Principal.Claims.First(m => m.Type == ClaimTypes.NameIdentifier).Value);
                         var user = userService.GetById(userId);
                         if (user == null)
