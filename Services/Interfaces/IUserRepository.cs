@@ -8,7 +8,7 @@ namespace Services.Interfaces
 {
     public interface IUserRepository
     {
-        public List<UsersDTO> GetAllUser();
+        public IList<UsersDTO> GetAllUser();
         public UsersDTO GetInforUserLogin(LoginRequestDTO input);
         public UsersDTO GetById(int id);
         public int? UserIdLoger => null ;

@@ -29,32 +29,28 @@ namespace WebApplication
 
             try
             {
-                var user = context.HttpContext.User.Claims.First(m => m.Type == ClaimTypes.NameIdentifier).Value;
-                if (string.IsNullOrEmpty(user)) context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
-                //_cache.Set("Role" + user, this.ActionName, TimeSpan.FromHours(1));
+                var userid = context.HttpContext.User.Claims.First(m => m.Type == ClaimTypes.NameIdentifier).Value;
+                var username = context.HttpContext.User.Claims.First(m => m.Type == ClaimTypes.Name).Value;
 
-                //var xx = _cache.Get("Role" + user);
+                if (string.IsNullOrEmpty(userid) || string.IsNullOrEmpty(username)) context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
 
-                //var Service =  context.HttpContext.RequestServices.GetService<IUserRepository>(); *///.GetService(typeof(UserRepository));
-
-
-
-                if (!HasPermission(context.HttpContext, _actionName))
+                if (!HasPermission(context.HttpContext, _actionName, username))
                 {
                     context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
-                }              
+                }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 context.Result = new JsonResult(new { message = "Error" }) { StatusCode = StatusCodes.Status500InternalServerError };
             }
         }
 
-        private bool HasPermission(HttpContext httpContext, string ActionName)
+        private bool HasPermission(HttpContext httpContext, string ActionName, string UserName)
         {
-            //var services = (IUserRepository)httpContext.RequestServices.GetService(typeof(IUserRepository));
-            var Service = httpContext.RequestServices.GetService<IUserRepository>();
-            return true;
+            var Service = httpContext.RequestServices.GetService<IUserRoleRepository>();
+            if (Service.CacheRoleByUserLogger().Any(m => m.ActionName == ActionName && m.UserName == UserName))
+                return true;
+            return false;
 
         }
     }

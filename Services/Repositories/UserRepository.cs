@@ -18,22 +18,21 @@ namespace Services.Repositories
         private readonly SaleManagerContext _context;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IMapper _mapper;
-        private readonly IMemoryCache _cache;
-        public UserRepository(SaleManagerContext context, IHttpContextAccessor contextAccessor, IMapper mapper, IMemoryCache cache)
+      
+        public UserRepository(SaleManagerContext context, IHttpContextAccessor contextAccessor, IMapper mapper)
         {
             _context = context;
             _contextAccessor = contextAccessor;
-            _mapper = mapper;
-            _cache = cache;
+            _mapper = mapper; 
         }
 
         public int? UserIdLogger => Int32.Parse(_contextAccessor.HttpContext.User.Claims.First(m => m.Type == ClaimTypes.NameIdentifier).Value);
-        public string UserAccountLogger => _contextAccessor.HttpContext.User.Claims.First(m => m.Type == ClaimTypes.NameIdentifier).Value;  
+        public string UserAccountLogger => _contextAccessor.HttpContext.User.Claims.First(m => m.Type == ClaimTypes.Name).Value;  
 
-        public List<UsersDTO> GetAllUser()
+        public IList<UsersDTO> GetAllUser()
         { 
             var data = _context.Users.ToList();
-            var output = _mapper.Map<List<UsersDTO>>(data);
+            var output = _mapper.Map<IList<UsersDTO>>(data);
             return output;
         }
 

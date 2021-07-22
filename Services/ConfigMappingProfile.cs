@@ -13,8 +13,8 @@ namespace Services
         {
             CreateMap<User, UsersDTO>();
             CreateMap<UsersDTO, User>();
-            CreateMap<List<User>, List<UsersDTO>>();
-            CreateMap<List<UsersDTO>, List<User>>();
+            //CreateMap<List<User>, List<UsersDTO>>();
+            //CreateMap<List<UsersDTO>, List<User>>();
         }
     }
 }

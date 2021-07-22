@@ -29,13 +29,13 @@ namespace WebApplication
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;           
+            Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-       
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<SaleManagerContext>(options => options.UseSqlServer(Configuration["appSettings:DefaultConnection"]));
@@ -45,6 +45,7 @@ namespace WebApplication
             #region scope
             services.AddScoped<UserRepository, UserRepository>();
             services.AddScoped<IRolesRepository, RolesRepository>();
+            services.AddScoped<IUserRoleRepository, UserRoleRepository>();
             services.AddHttpContextAccessor();
 
             //services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
