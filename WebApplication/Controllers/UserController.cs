@@ -43,8 +43,7 @@ namespace WebApplication.Controllers
                     Subject = new ClaimsIdentity(new Claim[]
                     {
                         new Claim(ClaimTypes.NameIdentifier, data.Id.ToString()),
-                        new Claim(ClaimTypes.Name, data.Account.ToString()),
-                        //new Claim(ClaimTypes.Role, "GetAllUsers,CreateUsers"),
+                        new Claim(ClaimTypes.Name, data.Account.ToString()),                      
                     }),
                     Expires = DateTime.UtcNow.AddDays(Int32.Parse(_configuration["appSettings:ExpiresDay"])),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

@@ -12,13 +12,13 @@ namespace Entities.Models
         {
         }
 
-        public SaleManagerContext(DbContextOptions<SaleManagerContext> options)
-            : base(options)
+        public SaleManagerContext(DbContextOptions<SaleManagerContext> options) : base(options)
         {
         }
 
         public virtual DbSet<Role> Roles { get; set; }
-        public virtual DbSet<User> Users { get; set; } 
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserRole> UserRoles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -97,6 +97,17 @@ namespace Entities.Models
                     .IsRequired()
                     .HasMaxLength(50)
                     .HasComment("Họ tên");
+            });
+
+            modelBuilder.Entity<UserRole>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.RoleId });
+
+                entity.ToTable("UserRole");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.Property(e => e.RoleId).HasColumnName("RoleID");
             });
 
             OnModelCreatingPartial(modelBuilder);
