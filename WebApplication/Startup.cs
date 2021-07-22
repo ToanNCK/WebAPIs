@@ -46,6 +46,7 @@ namespace WebApplication
             services.AddScoped<UserRepository, UserRepository>();
             services.AddScoped<IRolesRepository, RolesRepository>();
             services.AddHttpContextAccessor();
+
             //services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             #endregion
 
