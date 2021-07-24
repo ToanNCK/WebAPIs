@@ -16,5 +16,6 @@ namespace Services.Interfaces
         public bool CreateUsers(UsersDTO input);
         public bool EditUsers(UsersDTO input);
         public bool DeleteUsers(int id);
+        public string MD5(string password, string account);
     }
 }

@@ -10,6 +10,7 @@ using AutoMapper;
 using System.Security.Claims;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
 
 namespace Services.Repositories
 {
@@ -18,19 +19,19 @@ namespace Services.Repositories
         private readonly SaleManagerContext _context;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IMapper _mapper;
-      
+
         public UserRepository(SaleManagerContext context, IHttpContextAccessor contextAccessor, IMapper mapper)
         {
             _context = context;
             _contextAccessor = contextAccessor;
-            _mapper = mapper; 
+            _mapper = mapper;
         }
 
         public int? UserIdLogger => Int32.Parse(_contextAccessor.HttpContext.User.Claims.First(m => m.Type == ClaimTypes.NameIdentifier).Value);
-        public string UserAccountLogger => _contextAccessor.HttpContext.User.Claims.First(m => m.Type == ClaimTypes.Name).Value;  
+        public string UserAccountLogger => _contextAccessor.HttpContext.User.Claims.First(m => m.Type == ClaimTypes.Name).Value;
 
         public IList<UsersDTO> GetAllUser()
-        { 
+        {
             var data = _context.Users.ToList();
             var output = _mapper.Map<IList<UsersDTO>>(data);
             return output;
@@ -38,9 +39,11 @@ namespace Services.Repositories
 
         public UsersDTO GetInforUserLogin(LoginRequestDTO input)
         {
-            var data = _context.Users.FirstOrDefault(m => m.Account == input.Account && m.Password == input.Password);
+            var hashPassword = MD5(input.Password, input.Account);
+
+            var data = _context.Users.FirstOrDefault(m => m.Account.Equals(input.Account) && m.Password.Equals(hashPassword));
             var output = _mapper.Map<UsersDTO>(data);
-            return output; 
+            return output;
         }
 
         public UsersDTO GetById(int id)
@@ -56,6 +59,7 @@ namespace Services.Repositories
                 input.CreateDate = DateTime.Now;
                 input.Active = 1;
                 input.CreateBy = UserIdLogger;
+                input.Password = MD5(input.Password, input.Account);
 
                 var data = _mapper.Map<User>(input);
                 _context.Add(data);
@@ -76,11 +80,10 @@ namespace Services.Repositories
                 input.EditBy = UserIdLogger;
 
                 var data = _mapper.Map<User>(input);
-                var item = GetById(input.Id);                
+                var item = GetById(input.Id);
                 _context.Entry(item).CurrentValues.SetValues(data);
                 _context.SaveChanges();
                 return true;
-                 
             }
             catch (Exception)
             {
@@ -95,12 +98,24 @@ namespace Services.Repositories
                 var data = GetById(id);
                 _context.Remove(data);
                 _context.SaveChanges();
-                return true;                
+                return true;
             }
             catch (Exception)
             {
                 return false;
             }
+        }
+        public string MD5(string password, string account)
+        {
+            var subaccount = account.Substring(0, account.Length > 3 ? 3 : account.Length);
+            MD5 md5 = new MD5CryptoServiceProvider();
+            var hashBytes = BitConverter.ToString(md5.ComputeHash(ASCIIEncoding.ASCII.GetBytes(password + HashCodeMD5.Code + subaccount)));
+
+
+            var output = string.Join("", hashBytes.Split('-'));
+
+
+            return output.ToString();
         }
 
     }

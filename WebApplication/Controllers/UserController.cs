@@ -32,28 +32,39 @@ namespace WebApplication.Controllers
         [HttpGet]
         public JsonResult Login(LoginRequestDTO input)
         {
-            var data = _userRepository.GetInforUserLogin(input);
-            var tokenString = string.Empty;
-            if (data != null)
+            try
             {
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes(_configuration["appSettings:Secret"]);
-                var tokenDescriptor = new SecurityTokenDescriptor
+                var data = _userRepository.GetInforUserLogin(input);
+                if (data != null)
                 {
-                    Subject = new ClaimsIdentity(new Claim[]
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var key = Encoding.ASCII.GetBytes(_configuration["appSettings:Secret"]);
+                    var tokenDescriptor = new SecurityTokenDescriptor
                     {
+                        Subject = new ClaimsIdentity(new Claim[]
+                        {
                         new Claim(ClaimTypes.NameIdentifier, data.Id.ToString()),
-                        new Claim(ClaimTypes.Name, data.Account.ToString()),                      
-                    }),
-                    Expires = DateTime.UtcNow.AddDays(Int32.Parse(_configuration["appSettings:ExpiresDay"])),
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-                };
-                var token = tokenHandler.CreateToken(tokenDescriptor);
-                tokenString = tokenHandler.WriteToken(token);
+                        new Claim(ClaimTypes.Name, data.Account.ToString()),
+                        }),
+                        Expires = DateTime.UtcNow.AddDays(Int32.Parse(_configuration["appSettings:ExpiresDay"])),
+                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                    };
+                    var token = tokenHandler.CreateToken(tokenDescriptor);
+                    var tokenString = tokenHandler.WriteToken(token);
+                    var rs = new LoginResponseDTO(data.Id, data.Account, data.UserName, tokenString);
+                    return Json(new ResponseData(StatusCodes.Status200OK, "Đăng nhập thành công", rs));
+                }
+                else
+                {
+                    return Json(new ResponseData(StatusCodes.Status500InternalServerError, "Tài khoản hoặc mật khẩu chưa đúng. vui lòng nhập lại"));
+                }
             }
-            var rs = new LoginResponseDTO(data.Id, data.Account, data.UserName, tokenString);
+            catch (Exception)
+            {
+                return Json(new ResponseData(StatusCodes.Status500InternalServerError, "Lỗi trong quá trình đăng nhập, vui lòng thử lại"));
+            }
 
-            return Json(new ResponseData(200, "login thành công", rs));
+
         }
 
         [HttpGet]
