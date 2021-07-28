@@ -1,0 +1,14 @@
+﻿<div class="card mt-4">
+    <h4 class="card-header">You're logged in with Angular 10 & JWT!!</h4>
+    <div class="card-body">
+        <h6>Users from secure api end point</h6>
+        <div *ngIf="loading" class="spinner-border spinner-border-sm"></div>
+        <ul *ngIf="users">
+            <li *ngFor="let user of users">{{user.firstName}} {{user.lastName}}</li>
+        </ul>
+        <div class="position-relative is-img">
+            <img src="../../assets/img/mau-giuong-ngu-3.jpg" alt="mẫu dường ngủ 3" class="w-100">
+            <button type="button" class="btn btn-info btn-info-img" ngbTooltip="Đèn đẹp nhé!" triggers="hover:blur"></button>
+        </div>
+    </div>
+</div>
