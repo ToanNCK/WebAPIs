@@ -12,7 +12,8 @@ namespace Entities.Models
         {
         }
 
-        public SaleManagerContext(DbContextOptions<SaleManagerContext> options) : base(options)
+        public SaleManagerContext(DbContextOptions<SaleManagerContext> options)
+            : base(options)
         {
         }
 

@@ -1,4 +1,4 @@
-﻿################################################################################
+################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
@@ -11,3 +11,4 @@
 /Api/Services/obj
 /Api/WebApplication/bin/Debug/netcoreapp3.1
 /Api/WebApplication/obj
+Api/WebApplication/WebApplication.csproj.user
