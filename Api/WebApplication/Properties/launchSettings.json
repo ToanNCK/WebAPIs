@@ -17,11 +17,12 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "toannck": {
+    "Toan Nck Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
+      "launchUrl": "api/User/Login",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "toannck"
+        "ASPNETCORE_ENVIRONMENT": "DevelopmentToanNck"
       }
     },
     "WebApplication": {
