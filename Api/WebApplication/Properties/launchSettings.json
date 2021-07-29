@@ -17,6 +17,13 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
+    "toannck": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "toannck"
+      }
+    },
     "WebApplication": {
       "commandName": "Project",
       "launchBrowser": true,
