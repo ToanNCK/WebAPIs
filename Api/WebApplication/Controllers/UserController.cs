@@ -29,7 +29,7 @@ namespace WebApplication.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet]
+        [HttpPost]
         public JsonResult Login(LoginRequestDTO input)
         {
             try

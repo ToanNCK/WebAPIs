@@ -32,7 +32,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
 
         // provider used to create fake backend
-        fakeBackendProvider
+        // fakeBackendProvider
     ],
     bootstrap: [AppComponent]
 })
